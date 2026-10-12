@@ -1,5 +1,5 @@
 /* LGW Lab blog: the one stylesheet for every page. Change the look here, never in posts.
-   Colours follow the lab website (Yale blues, a yellow band). Light and dark follow the OS.
+   Colours follow the lab website (Yale blues, a yellow band). Light only, like the lab website.
    Post body rules (.prose, figures, gallery, code, references) come from the personal
    site's stylesheet, so the same Markdown renders the same way in both places. */
 
@@ -24,26 +24,6 @@
   --mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
   --measure: 44rem;
   --wide: 62rem;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #0b1a2e;
-    --surface: #10243d;
-    --head-bg: #13294a;
-    --head-text: #e8eff7;
-    --head-muted: #a4beda;
-    --band: #fabd0a;
-    --band-text: #0b1a2e;
-    --text: #e3eaf3;
-    --muted: #a7b9cd;
-    --faint: #8297ae;
-    --rule: #22395a;
-    --accent: #a9c6ea;
-    --accent-soft: #19304f;
-    --code-bg: #10233b;
-    --draft: #f0a24a;
-  }
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -205,14 +185,6 @@ code span.co, code span.do, code span.an, code span.cv, code span.in { color: va
 code span.fu { color: #0b6e99; }
 code span.op, code span.ot { color: var(--muted); }
 code span.er, code span.al { color: #c62828; }
-@media (prefers-color-scheme: dark) {
-  code span.kw, code span.cf, code span.im { color: #c7a4ff; }
-  code span.dt, code span.bu { color: #82aaff; }
-  code span.dv, code span.bn, code span.fl, code span.cn { color: #f0a36b; }
-  code span.st, code span.ch, code span.ss, code span.vs { color: #a5d6a7; }
-  code span.fu { color: #7fd1e8; }
-}
-
 /* footnotes and references */
 .footnotes, #refs { font-size: .95rem; color: var(--muted); }
 .footnotes { margin-top: 3rem; border-top: 1px solid var(--rule); padding-top: 1rem; }
@@ -276,7 +248,7 @@ a.footnote-ref sup { font: 600 .7em var(--sans); }
   .prose .gallery-panel { flex: none !important; }
 }
 .prose .gallery-panel { margin: 0; flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; }
-/* Figure images are drawn on white, so their frame stays white in dark mode too. */
+/* Figure images are drawn on white, so their frame is white. */
 .gallery-panel a { display: block; padding: .6rem; background: #fff; border: 1px solid var(--rule); border-radius: 6px; }
 .prose .gallery-panel img { width: 100%; height: auto; border-radius: 0; }
 .prose .gallery-panel figcaption {

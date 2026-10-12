@@ -134,24 +134,8 @@ def citation(post, site):
 
 
 # SVGs drawn by the schematic-figure skill (root element carries data-name) use one
-# shared palette. These maps recolour exactly those hexes, injected into each SVG as
-# CSS, so the drawing follows the reader's OS theme even inside <img>. Same scheme as
-# the personal site, with the dark tones moved from warm grey to the lab's navy.
-SVG_DARK = {
-    "#F4F2ED": "#0E1F35",   # paper background
-    "#FFFFFF": "#132841", "#FFF": "#132841",
-    "#E4E6EA": "#22395A",
-    "#C8D3D8": "#3A5476",
-    "#3D4652": "#D8E2EE",   # ink
-    "#111111": "#E4ECF5",   # patent-drawing ink
-    "#8A94A0": "#8FA3BC",
-    "#3A8FD0": "#5AA8E8",
-    "#D9822B": "#EC9A4E",
-    "#D93A3A": "#F06060",
-    "#9DC4E6": "#3E7099",
-    "#A6CDEA": "#3E7099",
-    "#EEC7A0": "#7A5534",
-}
+# shared palette. The blog is light only, like the lab website. So each SVG gets only
+# the light rules below, injected as CSS, and never turns dark inside <img>.
 # Light mode deepens the two role hues to reach 3:1 contrast on white.
 SVG_LIGHT = {
     "#3A8FD0": "#2F80C4",
@@ -160,9 +144,12 @@ SVG_LIGHT = {
 
 
 def theme_svg(path):
-    # Shared with the personal site (sitekit.py, an exact copy kept by sync_shared.py). The lab's dark navy is the
-    # page tone for the figure's background rectangle.
-    sitekit.theme_svg(path, SVG_DARK, SVG_LIGHT, "#0E1F35")
+    # sitekit.py (an exact copy of the personal site's file) also adds dark rules. The blog uses only its
+    # light colour map.
+    svg = path.read_text(encoding="utf-8")
+    style = f"<style>{sitekit.recolour(SVG_LIGHT)}</style>"
+    svg = re.sub(r"(<svg\b[^>]*>)", lambda m: m.group(1) + style, svg, count=1)
+    path.write_text(svg, encoding="utf-8")
 
 
 def external_links_new_tab(html_text, own):
@@ -186,7 +173,6 @@ def external_links_new_tab(html_text, own):
 # one in the personal site's editor. A post that is not a draft must not keep a marker.
 AI_MARK = re.compile(r'<(?:div|span)\b[^>]*\bclass="(?:[^"]*\s)?ai(?:\s[^"]*)?"')
 AI_CSS = (".ai{--ai:#c62828;--ai-bg:rgba(198,40,40,.08)}"
-          "@media (prefers-color-scheme:dark){.ai{--ai:#ef9a9a;--ai-bg:rgba(239,83,80,.16)}}"
           "div.ai{background:var(--ai-bg);border-left:3px solid var(--ai);padding:.5em .9em;border-radius:0 4px 4px 0}"
           "span.ai{background:var(--ai-bg);text-decoration:underline 2px var(--ai);text-underline-offset:.2em;"
           "-webkit-box-decoration-break:clone;box-decoration-break:clone}")

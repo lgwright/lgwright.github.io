@@ -1,4 +1,4 @@
-# Build the blog on every push to main and publish it with GitHub Pages at https://lgwright.github.io.
+# Build the blog on every push to main and publish it with GitHub Pages at https://lgwrightlab.github.io.
 # One-time repository setting: Settings -> Pages -> Source: "GitHub Actions".
 # The visit counter is GoatCounter (https://lgwlab.goatcounter.com). Only this build sets it.
 name: deploy
@@ -19,8 +19,8 @@ concurrency:
 
 jobs:
   build:
-    # This file is also in the private source repository, which has no Pages site: run only in lgwright/lgwright.github.io.
-    if: github.repository == 'lgwright/lgwright.github.io'
+    # This file is also in the private source repository, which has no Pages site: run only in lgwrightlab/lgwrightlab.github.io.
+    if: github.repository == 'lgwrightlab/lgwrightlab.github.io'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
