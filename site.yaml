@@ -1,0 +1,13 @@
+# Site settings. Posts live in posts/; the look lives in static/style.css.
+
+name: LGW Lab Blog
+lab: Logan Wright Applied Physics Laboratory
+org: Yale University
+url: https://lgwright.github.io
+lab_url: https://www.lgwrightlab.com/
+# One line under the header on the home page.
+tagline: Notes from the LGW Lab at Yale on the experiments, models and tools we build.
+# Default byline when a post names no authors.
+default_author: LGW Lab
+# Blog posts are published under this license (post footer and feed).
+license: {name: CC BY 4.0, url: "https://creativecommons.org/licenses/by/4.0/"}

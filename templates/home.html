@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block band %}<p class="wrap band-text">{{ site.tagline }}</p>{% endblock %}
+{% block main %}
+<h1 class="visually-hidden">{{ site.name }}</h1>
+{% if posts %}
+<ol class="post-list">
+{% for p in posts %}
+  <li>
+    <time datetime="{{ p.date.isoformat() }}">{{ p.date | longdate }}</time>
+    <h2><a href="{{ p.url }}">{{ p.title }}</a>{% if p.draft %} <em class="draft">draft</em>{% endif %}</h2>
+    <p class="by">{{ p.authors | join(", ") }}</p>
+    {% if p.summary %}<p class="summary">{{ p.summary }}</p>{% endif %}
+  </li>
+{% endfor %}
+</ol>
+{% else %}
+<p class="empty">No posts yet.</p>
+{% endif %}
+{% endblock %}

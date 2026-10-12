@@ -1,0 +1,59 @@
+# Build the blog on every push to main and publish it with GitHub Pages at https://lgwright.github.io.
+# One-time repository setting: Settings -> Pages -> Source: "GitHub Actions".
+# The visit counter is GoatCounter (https://lgwlab.goatcounter.com). Only this build sets it.
+name: deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    # This file is also in the private source repository, which has no Pages site: run only in lgwright/lgwright.github.io.
+    if: github.repository == 'lgwright/lgwright.github.io'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install jinja2 pyyaml
+      # Node and MathJax render TeX math at build time (mathjax.mjs). No package-lock.json exists, so use install.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: npm install --no-audit --no-fund
+      - name: Install pandoc
+        run: |
+          wget -q https://github.com/jgm/pandoc/releases/download/3.11/pandoc-3.11-1-amd64.deb
+          sudo dpkg -i pandoc-3.11-1-amd64.deb
+      - run: python build.py
+        env:
+          GOATCOUNTER: lgwlab
+      - name: Check the visit counter and that no custom domain file exists
+        run: |
+          grep -q 'lgwlab.goatcounter.com/count' site/index.html
+          test ! -e site/CNAME
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
