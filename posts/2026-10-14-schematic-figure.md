@@ -10,8 +10,6 @@ image: gallery/prompt-holo-photo.jpg
 
 Doing science is fun, but drawing the schematic figure that explains it has been challenging for us: we were never trained to do it, yet that figure is often the first thing a reader looks at. Inspired by some recent [viral videos made by Opus 5.5 on X](https://x.com/claudeai/status/2103515655760982273), we realized that the artistry of state-of-the-art AI models has probably already passed the level needed for publication-quality schematic figures. So we built a skill for it, open source on [GitHub](https://github.com/lgwrightlab/schematic-figure), and a benchmark to test it. It turns out that Opus 5.5 and GPT-6 Astra can make schematic figures close to publication quality on their own, once they are equipped with the right skill.
 
-We want to be clear that this skill does not replace the person who designs the figure. Its advantage is to give a fast first draft and many design ideas to choose from. The final figure still needs a human to check the science and fine-tune the details. In our own manuscripts in preparation, every figure that we kept went through several rounds of our feedback.
-
 Below are a few example outputs from our skill. Importantly, we chose papers published after the training cutoff of Opus 5.5, so that the model has no memory of their figure designs. From the perspective of our expertise in physics and machine learning, we think the results are very good! Without the skill, Opus 5.5 already makes decent figures in one shot, but they are mostly flat boxes and arrows, and the text does most of the work. With the skill, the figures use illustrated scenes, many are proper 3D renders, and the figure carries the idea without leaning on text. If you are from another field and have suggestions on the figures, please let us know.
 
 :::: {.gallery}
@@ -105,7 +103,7 @@ So what is a skill, and how do you use it? In case you are new to AI agents: a s
 
 ![The same request, "Draw Fig. 1 for this paper", without and with the skill. With the skill, the drawing agent loads a folder of instructions (SKILL.md), drawing code, optional 3D kits, automatic checks and design references. Like every diagram in this post, this figure was drawn by the skill itself.](skill_vs_noskill.svg){#fig:skill}
 
-Another nice feature of our skill is that the result is not just a picture. Suppose you use an image generation AI model, it will give you pixels, but the skill gives you the figure as vector graphics (SVG and PDF) together with the code that draws it. You can then open the file in Illustrator or Inkscape and move a label yourself. You can also ask the AI to change one thing, and it edits only that part. A request can be as short as this: "Use the schematic-figure skill to design Fig. 1 from this paper's text. Width 183 mm."
+Another nice feature of our skill is that the result is not just a picture. Suppose you use an image generation AI model, it will give you pixels, but the skill gives you the figure as vector graphics (SVG and PDF) together with the code that draws it. You can then open the file in Illustrator or Inkscape and move a label yourself. You can also ask the AI to change one thing, and it edits only that part.
 
 Notably, the skill is not a free lunch. With the skill, the agent spends about four times longer on a figure, for both Opus 5.5 and GPT-6 Astra. But on average it still needs less than 20 minutes to make a finished schematic figure, which is of course worth the time!
 
