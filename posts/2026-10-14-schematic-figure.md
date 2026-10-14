@@ -57,7 +57,7 @@ Below are a few example outputs from our skill. Importantly, we chose papers pub
 
 ::::
 
-Notably, we trained this skill on published scientific papers' schematic figures, but what the skill has learned generalizes well beyond a completed paper. Prompts as short as one sentence and as long as a technical paper description can all give pretty good results, meaning you can also use it for making figures for your slide deck or an experimental report. Below is a gallery of figures we generated across domains with just a simple prompt of one or two sentences. Each figure is the first run of its prompt, not picked from several.
+Notably, we trained this skill on published scientific papers' schematic figures, but what the skill has learned generalizes well beyond a completed paper. Prompts as short as one sentence and as long as a technical paper description can all give pretty good results, meaning you can also use it for making figures for your slide deck or an experimental report. Below is a gallery of figures we generated across domains with just a simple prompt of one or two sentences.
 
 :::: {.gallery}
 ::: {.slide field="Physics"}
@@ -98,6 +98,8 @@ Notably, we trained this skill on published scientific papers' schematic figures
 :::
 
 ::::
+
+We should be clear about two limits. First, we are not experts in most of these fields, so we cannot vouch for every detail of these figures. Second, these prompts describe well-established concepts. In our experience the skill does much worse on a novel concept, unless it gets a detailed technical description of it (more tips later).
 
 So what is a skill, and how do you use it? In case you are new to AI agents: a skill is a folder that an AI model loads on top of its built-in abilities. It holds written instructions, and it can also hold code and tools. Our skill holds the instructions for making publication-ready figures, a drawing library, 3D kits and automatic checks. The figure below shows how an AI model works when you ask it to draw a figure without and with our skill.
 
