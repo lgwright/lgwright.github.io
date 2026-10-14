@@ -15,7 +15,7 @@
 <meta property="og:description" content="{{ self.description() }}">
 <meta property="og:url" content="{{ site.url }}{% block path %}/{% endblock %}">
 <meta property="og:image" content="{{ site.url }}{% block og_image %}/apple-touch-icon.png{% endblock %}">
-<meta name="twitter:card" content="summary">
+<meta name="twitter:card" content="{% block twitter_card %}summary{% endblock %}">
 <link rel="alternate" type="application/atom+xml" title="{{ site.name }}" href="/feed.xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

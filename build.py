@@ -24,6 +24,7 @@ import shutil
 import subprocess
 import sys
 from pathlib import Path
+from urllib.parse import urljoin
 
 import jinja2
 import yaml
@@ -152,6 +153,28 @@ def theme_svg(path):
     path.write_text(svg, encoding="utf-8")
 
 
+DARK_MEDIA = "@media (prefers-color-scheme: dark)"
+
+
+def strip_dark(path):
+    """Remove every dark-mode block from an SVG. Plot scripts write their own, and the blog is light only."""
+    svg = path.read_text(encoding="utf-8")
+    if DARK_MEDIA not in svg and "@media (prefers-color-scheme:dark)" not in svg:
+        return
+    out, i = [], 0
+    for m in re.finditer(r"@media\s*\(prefers-color-scheme:\s*dark\)\s*\{", svg):
+        if m.start() < i:
+            continue
+        depth, j = 1, m.end()
+        while depth and j < len(svg):
+            depth += {"{": 1, "}": -1}.get(svg[j], 0)
+            j += 1
+        out.append(svg[i:m.start()])
+        i = j
+    out.append(svg[i:])
+    path.write_text("".join(out), encoding="utf-8")
+
+
 def external_links_new_tab(html_text, own):
     """Links to other sites open in a new tab. Links to this blog and to the lab
     website (`own`, a tuple of URL prefixes) keep the same tab."""
@@ -186,6 +209,13 @@ def check_ai_markers(posts):
                  + ", ".join(bad) + ". Accept or reject each suggestion in the editor, or set draft: true.")
 
 
+def absolute_links(body, base):
+    # Feed readers and archivers load entry HTML away from the post page, so every
+    # relative src and href (files and "#" anchors) becomes an absolute URL.
+    return re.sub(r'\b(src|href)="([^"]*)"',
+                  lambda m: f'{m[1]}="{urljoin(base, m[2])}"', body)
+
+
 def atom_feed(site, posts):
     now = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     items = []
@@ -197,7 +227,7 @@ def atom_feed(site, posts):
             f"<updated>{ts}</updated>"
             + "".join(f"<author><name>{html.escape(a)}</name></author>" for a in p["authors"])
             + f"<summary>{html.escape(p['summary'])}</summary>"
-            f"<content type=\"html\">{html.escape(p['body'])}</content></entry>")
+            f"<content type=\"html\">{html.escape(absolute_links(p['body'], site['url'] + p['url']))}</content></entry>")
     return ("<?xml version=\"1.0\" encoding=\"utf-8\"?>"
             "<feed xmlns=\"http://www.w3.org/2005/Atom\">"
             f"<title>{html.escape(site['name'])}</title>"
@@ -278,8 +308,21 @@ def build(drafts, extra):
             math_pages.append(str(dest))
         assets = p["dir"] / p["slug"]
         if assets.is_dir():
-            shutil.copytree(assets, OUT / p["slug"], dirs_exist_ok=True)
+            # Copy only the files the page refers to. The folder can also hold drafts and unpublished results,
+            # and every copied file is public at a guessable address.
+            skipped = []
+            for f in sorted(x for x in assets.rglob("*") if x.is_file()):
+                rel = f.relative_to(assets).as_posix()
+                if rel in page_html:
+                    (OUT / p["slug"] / rel).parent.mkdir(parents=True, exist_ok=True)
+                    shutil.copy2(f, OUT / p["slug"] / rel)
+                elif not f.name.startswith("."):
+                    skipped.append(rel)
+            if skipped:
+                print(f"{p['slug']}: {len(skipped)} unreferenced file(s) not published: {', '.join(skipped[:8])}"
+                      + (" …" if len(skipped) > 8 else ""))
             for svg in (OUT / p["slug"]).rglob("*.svg"):
+                strip_dark(svg)
                 if re.search(r"<svg\b[^>]*\bdata-name=", svg.read_text(encoding="utf-8")[:2000]):
                     theme_svg(svg)
     write("404.html", env.get_template("404.html").render(**ctx, page="404"))

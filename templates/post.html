@@ -3,6 +3,7 @@
 {% block description %}{{ post.summary or post.title }}{% endblock %}
 {% block og_type %}article{% endblock %}
 {% block og_image %}{{ post.image or "/apple-touch-icon.png" }}{% endblock %}
+{% block twitter_card %}{{ "summary_large_image" if post.image else "summary" }}{% endblock %}
 {% block head %}
 <meta name="citation_title" content="{{ post.title }}">
 {% for a in post.authors %}<meta name="citation_author" content="{{ a }}">
